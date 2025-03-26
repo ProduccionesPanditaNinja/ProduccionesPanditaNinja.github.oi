@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actores</title>
+    <link rel="stylesheet" href="actor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    <div class="banner">
+        <img src="prueba a mano/Baner.gif" alt="Banner">
+    </div>
+    <header>
+        <img src="prueba a mano/logo.png" alt="Logo" onclick="openAdminPanel()">
+        <img src="pro.png" alt="Imagen promocional" class="header-extra-image">
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="actores.html"><i class="fas fa-users"></i> Actores</a></li>
+            <li><a href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+        </ul>
+    </nav>
+    
+    <div id="posts-container">
+        <div class="posts-grid" id="actores">
+            <!-- Los posts de Actores se cargarán aquí dinámicamente -->
+        </div>
+    </div>
+    
+    <div id="adminPanel">
+        <button class="close-btn" onclick="document.getElementById('adminPanel').style.display='none'">&times;</button>
+        <h2 id="adminPanelHeader">Panel de Administración</h2>
+        <form id="adminForm">
+            <input type="text" id="postTitle" placeholder="Título del post" required>
+            <textarea id="postContent" placeholder="Contenido del post" required></textarea>
+            <input type="file" id="postImageFile" accept="image/*">
+            <input type="text" id="postLink" placeholder="Enlace (opcional)">
+            <button type="submit">Guardar Post</button>
+            <button type="button" class="logout-btn" onclick="logoutAdmin()">Cerrar Sesión</button>
+        </form>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 *"Este contenido es un doblaje hecho por fans (fandub) con fines sin ánimo de lucro y únicamente para entretenimiento. No tenemos ninguna afiliación con los creadores originales ni pretendemos infringir los derechos de autor.
+
+            El material original (voces, personajes, música, etc.) pertenece a sus respectivos dueños. Este fandub es una interpretación no oficial realizada por aficionados.
+            
+            Si eres el titular de los derechos y deseas que este video sea eliminado, por favor contáctanos directamente y lo retiraremos de inmediato.
+            
+            ¡Gracias por ver y apoyar el contenido original!"*.</p>
+    </footer>
+
+    <script>
+        // Verificar el estado de administrador al cargar la página
+        let isAdmin = localStorage.getItem('isAdmin') === 'true';
+        
+        // Mostrar el panel si ya está logueado
+        if(isAdmin) {
+            document.getElementById('adminPanel').style.display = 'block';
+        }
+
+        function openAdminPanel() {
+            if (!isAdmin) {
+                const username = prompt("Usuario:");
+                const password = prompt("Contraseña:");
+                if (username === "Pandizen" && password === "panditabebe7") {
+                    isAdmin = true;
+                    localStorage.setItem('isAdmin', 'true');
+                    document.getElementById('adminPanel').style.display = 'block';
+                    loadPosts();
+                } else {
+                    alert("Credenciales incorrectas");
+                }
+            } else {
+                document.getElementById('adminPanel').style.display = 'block';
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            localStorage.setItem('isAdmin', 'false');
+            document.getElementById('adminPanel').style.display = 'none';
+            loadPosts();
+        }
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
+            const postContainer = document.getElementById('actores');
+            postContainer.innerHTML = '';
+            
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post-card';
+                postElement.style.animationDelay = `${index * 0.1}s`;
+                
+                postElement.innerHTML = `
+                    ${post.image ? `<img src="${post.image}" alt="Post Image" class="post-image">` : ''}
+                    <div class="post-content">
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        ${post.link ? `<a href="${post.link}" target="_blank">Ver más</a>` : ''}
+                        ${isAdmin ? `<button class="delete-btn" onclick="deletePost(${index})">Borrar</button>` : ''}
+                    </div>
+                `;
+                postContainer.appendChild(postElement);
+            });
+        }
+
+        document.getElementById('adminForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const imageFile = document.getElementById('postImageFile').files[0];
+            const link = document.getElementById('postLink').value;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
+                const newPost = { title, content, image: e.target.result, link };
+                posts.push(newPost);
+                localStorage.setItem('postsActores', JSON.stringify(posts));
+                loadPosts();
+            };
+
+            if (imageFile) {
+                reader.readAsDataURL(imageFile);
+            } else {
+                const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
+                const newPost = { title, content, image: null, link };
+                posts.push(newPost);
+                localStorage.setItem('postsActores', JSON.stringify(posts));
+                loadPosts();
+            }
+
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminPanel').style.display = 'none';
+        });
+
+        function deletePost(index) {
+            const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
+            posts.splice(index, 1);
+            localStorage.setItem('postsActores', JSON.stringify(posts));
+            loadPosts();
+        }
+
+        // Funcionalidad para arrastrar el panel de administración
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        let isDragging = false;
+        const adminPanelHeader = document.getElementById('adminPanelHeader');
+
+        if(adminPanelHeader) {
+            adminPanelHeader.onmousedown = startDragPanel;
+        }
+
+        function startDragPanel(e) {
+            e = e || window.event;
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = stopDragPanel;
+            document.onmousemove = dragPanel;
+            isDragging = true;
+        }
+
+        function dragPanel(e) {
+            if (!isDragging) return;
+            e = e || window.event;
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            const adminPanel = document.getElementById("adminPanel");
+            adminPanel.style.top = (adminPanel.offsetTop - pos2) + "px";
+            adminPanel.style.left = (adminPanel.offsetLeft - pos1) + "px";
+        }
+
+        function stopDragPanel() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            isDragging = false;
+        }
+
+        // Cargar los posts cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPosts();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+/* Reset y Estilos Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e6e6ff;
+    color: #333;
+}
+
+/* Banner */
+.banner {
+    position: relative;
+    width: 100%;
+    height: 430px;
+    overflow: hidden;
+}
+
+.banner img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+header {
+    position: relative;
+}
+
+/* Agrega esto en tu CSS, preferiblemente después de los estilos del logo */
+.header-extra-image {
+    position: absolute;
+    top: -130px; /* Posición más arriba */
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 450px; /* Tamaño aumentado */
+    height: auto;
+    z-index: 10;
+    animation: float 3s ease-in-out infinite;
+}
+
+
+/* Animación opcional para darle un efecto flotante */
+@keyframes float {
+    0% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+    100% { transform: translateX(-50%) translateY(0px); }
+}
+
+
+header img {
+    max-width: 300px;
+    height: auto;
+    cursor: pointer;
+    position: absolute;
+    top: -359px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+header img:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+
+/* Navegación */
+nav {
+    background-color: #9370db;
+    padding: 15px 0;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #a9a9a9;
+    color: #fff;
+}
+
+nav ul li a.active {
+    background-color: #a9a9a9;
+}
+
+/* Contenedor principal mejorado */
+#posts-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Grid de posts mejorado */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+/* Tarjetas de post mejoradas */
+.post-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+    border: 1px solid #d1c4e9;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    background-color: #f3e5f5;
+}
+
+.post-image-container {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: #f8f8f8;
+}
+
+.post-image {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.post-card:hover .post-image {
+    transform: scale(1.03);
+}
+
+.post-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-content h3 {
+    margin-bottom: 12px;
+    color: #6a5acd;
+}
+
+.post-content p {
+    color: #483d8b;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.post-meta {
+    margin-top: auto;
+    font-size: 0.9em;
+    color: #777;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Orden de los posts (el más reciente primero) */
+.post-card:nth-child(1) { animation-delay: 0.1s; }
+.post-card:nth-child(2) { animation-delay: 0.2s; }
+.post-card:nth-child(3) { animation-delay: 0.3s; }
+.post-card:nth-child(4) { animation-delay: 0.4s; }
+.post-card:nth-child(5) { animation-delay: 0.5s; }
+.post-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Panel de administración */
+#adminPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0f8ff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #b0c4de;
+}
+
+#adminPanel h2 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #483d8b;
+    cursor: move;
+}
+
+#adminForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#adminForm input, 
+#adminForm textarea {
+    padding: 12px;
+    border: 1px solid #d1c4e9;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+#adminForm textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#adminForm button {
+    padding: 12px 20px;
+    background-color: #b0c4de;
+    color: #483d8b;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#adminForm button:hover {
+    background-color: #778899;
+    color: #fff;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Botones */
+.delete-btn {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #cc0000;
+}
+
+.logout-btn {
+    background-color: #ff9800;
+    margin-top: 10px;
+}
+
+.logout-btn:hover {
+    background-color: #e68a00;
+}
+
+/* Footer */
+footer {
+    background-color: #9370db;
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 50px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    nav ul li {
+        margin: 8px 0;
+    }
+    
+    .posts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    header img {
+        max-width: 200px;
+        top: -320px;
+    }
+    
+    .banner {
+        height: 300px;
+    }
+    
+    .post-image-container {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    header img {
+        max-width: 150px;
+        top: -280px;
+    }
+    
+    .banner {
+        height: 250px;
+    }
+    
+    nav ul li a {
+        font-size: 16px;
+        padding: 6px 12px;
+    }
+    
+    .post-image-container {
+        height: 160px;
+    }
+}

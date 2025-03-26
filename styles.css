@@ -1,0 +1,339 @@
+/* Reset y Estilos Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e6e6ff; /* Pastel Blue */
+    color: #333;
+}
+
+/* Banner */
+.banner {
+    position: relative;
+    width: 100%;
+    height: 430px;
+    overflow: hidden;
+}
+
+.banner img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Para que la imagen cubra todo el banner */
+    z-index: -1; /* Para que esté detrás del contenido */
+}
+
+header {
+    position: relative; /* Contenedor padre debe ser relativo para que funcione */
+}
+
+/* Agrega esto en tu CSS, preferiblemente después de los estilos del logo */
+.header-extra-image {
+    position: absolute;
+    top: -130px; /* Posición más arriba */
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 450px; /* Tamaño aumentado */
+    height: auto;
+    z-index: 10;
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Animación opcional para darle un efecto flotante */
+@keyframes float {
+    0% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+    100% { transform: translateX(-50%) translateY(0px); }
+}
+
+
+
+header img {
+    max-width: 300px;
+    height: auto;
+    cursor: pointer;
+    position: absolute; /* Permite mover el logo */
+    top: -359px; /* Mueve el logo hacia arriba */
+    left: 50%;
+    transform: translateX(-50%); /* Centra horizontalmente */
+    z-index: 10;
+}
+
+header img:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+
+
+/* Navegación */
+nav {
+    background-color: #9370db; /* Morado medio */
+    padding: 15px 0;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+nav ul li a:hover {
+    background-color: #a9a9a9;
+    color: #fff;
+}
+
+nav ul li a.active {
+    background-color: #a9a9a9;
+}
+
+/* Contenedor de posts - MODIFICADO PARA UNA COLUMNA */
+#posts {
+    max-width: 800px; /* Ancho máximo más estrecho para mejor lectura */
+    margin: 30px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Estilos para los posts */
+.post {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #d1c4e9;
+    padding: 20px;
+    position: relative;
+    width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+.post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    background-color: #f3e5f5;
+}
+
+.post h3 {
+    margin-bottom: 12px;
+    color: #6a5acd;
+    font-size: 1.5em;
+}
+
+.post p {
+    color: #483d8b;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+.post img {
+    width: 100%;
+    height: auto;
+    max-height: 400px; /* Imágenes más grandes */
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 15px 0;
+    display: block;
+}
+
+/* Botones */
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-btn {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #cc0000;
+}
+
+.like-button {
+    background-color: #9370db;
+    color: white;
+}
+
+.like-button:disabled {
+    background-color: #d1c4e9;
+    cursor: not-allowed;
+}
+
+.like-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.like-count {
+    font-size: 16px;
+    color: #483d8b;
+    font-weight: bold;
+}
+
+/* Panel de administración */
+#adminPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0f8ff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #b0c4de;
+}
+
+#adminPanel h2 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #483d8b;
+    cursor: move;
+    user-select: none;
+}
+
+#adminForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#adminForm input, 
+#adminForm textarea {
+    padding: 12px;
+    border: 1px solid #d1c4e9;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+#adminForm textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#adminForm button {
+    background-color: #b0c4de;
+    color: #483d8b;
+    margin-right: 0;
+}
+
+#adminForm button:hover {
+    background-color: #778899;
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    background-color: #9370db;
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 50px;
+}
+
+/* Responsive - MENOS CAMBIOS YA QUE ES DE UNA COLUMNA */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    nav ul li {
+        margin: 8px 0;
+    }
+    
+    header img {
+        max-width: 200px;
+    }
+    
+    .banner {
+        height: 300px;
+    }
+    
+    .post {
+        padding: 15px;
+    }
+    
+    .post h3 {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    header img {
+        max-width: 150px;
+    }
+    
+    .banner {
+        height: 250px;
+    }
+    
+    nav ul li a {
+        font-size: 16px;
+        padding: 6px 12px;
+    }
+    
+    #adminPanel {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .post img {
+        max-height: 250px;
+    }
+}

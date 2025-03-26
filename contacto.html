@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="banner">
+        <img src="prueba a mano/Baner.gif" alt="Banner">
+    </div>
+    <header>
+        <img src="prueba a mano/logo.png" alt="Logo" onclick="openAdminPanel()">
+        <img src="pro.png" alt="Imagen promocional" class="header-extra-image">
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="actores.html"><i class="fas fa-users"></i> Actores</a></li>
+            <li><a href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+        </ul>
+    </nav>
+    
+    
+    <form action="https://formsubmit.co/produccionespanditaninja@gmail.com" method="POST" class="formulario-mejorado">
+        <div class="grupo-formulario">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+        </div>
+        
+        <div class="grupo-formulario">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+        </div>
+        
+        <div class="grupo-formulario">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje aquí..." rows="5" required></textarea>
+        </div>
+        
+        <input type="hidden" name="_next" value="http://tusitio.com/gracias.html">
+        
+        <div class="grupo-formulario">
+            <button type="submit" class="boton-enviar">Enviar Mensaje</button>
+        </div>
+    </form>
+    
+    <style>
+        .formulario-mejorado {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .grupo-formulario {
+            margin-bottom: 20px;
+        }
+        
+        .formulario-mejorado label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .formulario-mejorado input[type="text"],
+        .formulario-mejorado input[type="email"],
+        .formulario-mejorado textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        .formulario-mejorado input[type="text"]:focus,
+        .formulario-mejorado input[type="email"]:focus,
+        .formulario-mejorado textarea:focus {
+            border-color: #9370db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(226, 74, 193, 0.3);
+        }
+        
+        .formulario-mejorado textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .boton-enviar {
+            background-color: #9370db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .boton-enviar:hover {
+            background-color: #9370db;
+        }
+        
+        /* Efecto para campos requeridos */
+        .formulario-mejorado input:required,
+        .formulario-mejorado textarea:required {
+            border-left: 3px solid #9370db;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .formulario-mejorado {
+                padding: 20px;
+            }
+        }
+    </style>
+
+    <footer>
+        <p>&copy; 2025 *"Este contenido es un doblaje hecho por fans (fandub) con fines sin ánimo de lucro y únicamente para entretenimiento. No tenemos ninguna afiliación con los creadores originales ni pretendemos infringir los derechos de autor.
+
+            El material original (voces, personajes, música, etc.) pertenece a sus respectivos dueños. Este fandub es una interpretación no oficial realizada por aficionados.
+            
+            Si eres el titular de los derechos y deseas que este video sea eliminado, por favor contáctanos directamente y lo retiraremos de inmediato.
+            
+            ¡Gracias por ver y apoyar el contenido original!"*.</p>
+    </footer>
+
+    <script>
+        function openAdminPanel() {
+            alert("Modo administrador no disponible en esta página.");
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert("Mensaje enviado con éxito!");
+            document.getElementById('contactForm').reset();
+        });
+    </script>
+</body>
+</html>
