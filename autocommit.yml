@@ -1,0 +1,31 @@
+name: Auto Commit Changes
+
+on:
+  # Se activa cuando hay cambios en los archivos especificados
+  push:
+    paths:
+      - 'posts/**'       # Cambia esto por la carpeta donde guardas tus posts
+      - 'data/posts.json' # O un archivo JSON que almacene tus posts
+
+jobs:
+  commit-changes:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Obtener una copia del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Permisos para hacer push
+
+      # Paso 2: Configurar Git
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      # Paso 3: Hacer commit y push si hay cambios
+      - name: Commit and Push Changes
+        run: |
+          git add .
+          git commit -m "Auto-commit: Actualización de posts" || echo "No hay cambios que commitear"
+          git push
