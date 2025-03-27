@@ -40,112 +40,66 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 *"Este contenido es un doblaje hecho por fans (fandub) con fines sin ánimo de lucro y únicamente para entretenimiento. No tenemos ninguna afiliación con los creadores originales ni pretendemos infringir los derechos de autor.
+        <p>&copy; 2025 *\"Este contenido es un doblaje hecho por fans (fandub) con fines sin ánimo de lucro y únicamente para entretenimiento. No tenemos ninguna afiliación con los creadores originales ni pretendemos infringir los derechos de autor.
 
             El material original (voces, personajes, música, etc.) pertenece a sus respectivos dueños. Este fandub es una interpretación no oficial realizada por aficionados.
             
             Si eres el titular de los derechos y deseas que este video sea eliminado, por favor contáctanos directamente y lo retiraremos de inmediato.
             
-            ¡Gracias por ver y apoyar el contenido original!"*.</p>
+            ¡Gracias por ver y apoyar el contenido original!\"*.</p>
     </footer>
 
     <script>
-        
-        let likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
         let isAdmin = localStorage.getItem('isAdmin') === 'true';
-const GITHUB_TOKEN = 'TU_TOKEN_GITHUB'; // Reemplázalo con tu token real
-const REPO_OWNER = 'TU_USUARIO'; // Tu nombre de usuario GitHub
-const REPO_NAME = 'TU_REPO'; // Nombre de tu repositorio
+        let likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
 
-// Función para sincronizar con GitHub
-async function syncWithGitHub(section, data) {
-    try {
-        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/dispatches`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.everest-preview+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                event_type: 'update_posts',
-                client_payload: {
-                    section: section,
-                    data: data
-                }
-            })
-        });
-        if (!response.ok) throw new Error(await response.text());
-        console.log('Datos enviados a GitHub correctamente');
-    } catch (error) {
-        console.error('Error al sincronizar con GitHub:', error);
-        alert('Error al guardar en la nube. Los cambios se guardaron localmente.');
-    }
-}
+        // Función para actualizar el archivo en GitHub
+        async function updateGitHubFile(githubToken, repoOwner, repoName, filePath, content, commitMessage) {
+            const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+            
+            // Primero, obtener el SHA del archivo existente si existe
+            let sha = null;
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                const data = await response.json();
+                sha = data.sha;
+            } catch (error) {
+                console.log("Archivo no encontrado, creando uno nuevo");
+            }
 
-// Función para cargar posts
-function loadPosts() {
-    const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
-    const postContainer = document.getElementById('actores');
-    postContainer.innerHTML = '';
-    
-    posts.forEach((post, index) => {
-        const postElement = document.createElement('div');
-        postElement.className = 'post-card';
-        postElement.style.animationDelay = `${index * 0.1}s`;
-        
-        postElement.innerHTML = `
-            ${post.image ? `<img src="${post.image}" alt="Post Image" class="post-image">` : ''}
-            <div class="post-content">
-                <h3>${post.title}</h3>
-                <p>${post.content}</p>
-                ${post.link ? `<a href="${post.link}" target="_blank">Ver más</a>` : ''}
-                ${isAdmin ? `<button class="delete-btn" onclick="deletePost(${index})">Borrar</button>` : ''}
-            </div>
-        `;
-        postContainer.appendChild(postElement);
-    });
-}
+            const body = JSON.stringify({
+                message: commitMessage,
+                content: btoa(content), // Codificar el contenido a Base64
+                sha: sha, // Incluir el SHA si es una actualización
+                branch: 'main' // o 'master', dependiendo de tu rama
+            });
 
-// Función para eliminar posts
-async function deletePost(index) {
-    const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
-    posts.splice(index, 1);
-    localStorage.setItem('postsActores', JSON.stringify(posts));
-    await syncWithGitHub('actores', posts);
-    loadPosts();
-}
+            const method = sha ? 'PUT' : 'PUT'; // Usar PUT para crear y actualizar
 
-// Evento del formulario
-document.getElementById('adminForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    
-    const title = document.getElementById('postTitle').value;
-    const content = document.getElementById('postContent').value;
-    const imageFile = document.getElementById('postImageFile').files[0];
-    const link = document.getElementById('postLink').value;
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: body
+            });
 
-    const processPost = async (imageData = null) => {
-        const posts = JSON.parse(localStorage.getItem('postsActores')) || [];
-        const newPost = { title, content, image: imageData, link };
-        posts.push(newPost);
-        localStorage.setItem('postsActores', JSON.stringify(posts));
-        
-        await syncWithGitHub('actores', posts);
-        loadPosts();
-    };
+            const data = await response.json();
 
-    if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = async (e) => await processPost(e.target.result);
-        reader.readAsDataURL(imageFile);
-    } else {
-        await processPost();
-    }
+            if (!response.ok) {
+                console.error('Error al actualizar el archivo:', data);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-    this.reset();
-    document.getElementById('adminPanel').style.display = 'none';
-});
+            console.log('Archivo actualizado:', data);
+        }
 
         function openAdminPanel() {
             if (!isAdmin) {
@@ -210,7 +164,7 @@ document.getElementById('adminForm').addEventListener('submit', async function(e
             }
         }
 
-        document.getElementById('adminForm').addEventListener('submit', function(event) {
+        document.getElementById('adminForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
@@ -218,13 +172,32 @@ document.getElementById('adminForm').addEventListener('submit', async function(e
             const link = document.getElementById('postLink').value;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 let posts = JSON.parse(localStorage.getItem('postsInicio')) || [];
                 const newPost = { title, content, image: e.target.result, link, likes: 0 }; // Inicializar likes en 0
                 posts.push(newPost);
 
                 localStorage.setItem('postsInicio', JSON.stringify(posts));
                 loadPosts();
+
+                // Convertir los posts a JSON
+                const postsJSON = JSON.stringify(posts, null, 2);
+
+                // Configura los detalles de tu repositorio
+                const githubToken = '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'; // Reemplaza con tu token
+                const repoOwner = 'ProduccionesPanditaNinja';
+                const repoName = 'ProduccionesPanditaNinja.github.io';
+                const filePath = 'postsInicio.json'; // Nombre del archivo en tu repositorio
+                const commitMessage = `Actualización de posts en ${new Date().toISOString()}`;
+
+                try {
+                    // Actualiza el archivo en GitHub
+                    await updateGitHubFile(githubToken, repoOwner, repoName, filePath, postsJSON, commitMessage);
+                    alert('Posts guardados en GitHub!');
+                } catch (error) {
+                    console.error('Error al guardar en GitHub:', error);
+                    alert('Error al guardar en GitHub!');
+                }
             };
 
             if (imageFile) {
@@ -236,6 +209,25 @@ document.getElementById('adminForm').addEventListener('submit', async function(e
 
                 localStorage.setItem('postsInicio', JSON.stringify(posts));
                 loadPosts();
+
+                // Convertir los posts a JSON
+                const postsJSON = JSON.stringify(posts, null, 2);
+
+                // Configura los detalles de tu repositorio
+                const githubToken = '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'; // Reemplaza con tu token
+                const repoOwner = 'ProduccionesPanditaNinja';
+                const repoName = 'ProduccionesPanditaNinja.github.io';
+                const filePath = 'postsInicio.json'; // Nombre del archivo en tu repositorio
+                const commitMessage = `Actualización de posts en ${new Date().toISOString()}`;
+
+                try {
+                    // Actualiza el archivo en GitHub
+                    await updateGitHubFile(githubToken, repoOwner, repoName, filePath, postsJSON, commitMessage);
+                    alert('Posts guardados en GitHub!');
+                } catch (error) {
+                    console.error('Error al guardar en GitHub:', error);
+                    alert('Error al guardar en GitHub!');
+                }
             }
 
             document.getElementById('adminForm').reset();
