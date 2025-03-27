@@ -65,9 +65,8 @@
         // Función para actualizar el archivo en GitHub
         async function updateGitHubFile(githubToken, repoOwner, repoName, filePath, content, commitMessage) {
             const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-            
-            // Primero, obtener el SHA del archivo existente si existe
             let sha = null;
+
             try {
                 const response = await fetch(url, {
                     headers: {
@@ -75,39 +74,50 @@
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
-                const data = await response.json();
-                sha = data.sha;
+
+                if (response.status === 404) {
+                    console.log("Archivo no encontrado, creando uno nuevo");
+                } else {
+                    const data = await response.json();
+                    sha = data.sha;
+                }
             } catch (error) {
-                console.log("Archivo no encontrado, creando uno nuevo");
+                console.error("Error al obtener el SHA del archivo:", error);
+                throw error;
             }
 
             const body = JSON.stringify({
                 message: commitMessage,
-                content: btoa(content), // Codificar el contenido a Base64
-                sha: sha, // Incluir el SHA si es una actualización
-                branch: 'main' // o 'master', dependiendo de tu rama
+                content: btoa(content),
+                sha: sha,
+                branch: 'main'
             });
 
-            const method = sha ? 'PUT' : 'PUT'; // Usar PUT para crear y actualizar
+            const method = sha ? 'PUT' : 'PUT';
 
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: body
-            });
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
+                });
 
-            const data = await response.json();
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error al actualizar el archivo:', errorData);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
-            if (!response.ok) {
-                console.error('Error al actualizar el archivo:', data);
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                console.log('Archivo actualizado:', data);
+            } catch (error) {
+                console.error("Error al enviar la solicitud:", error);
+                throw error;
             }
-
-            console.log('Archivo actualizado:', data);
         }
 
         function openAdminPanel() {
@@ -172,18 +182,14 @@
                 localStorage.setItem('postsActores', JSON.stringify(posts));
                 loadPosts();
 
-                // Convertir los posts a JSON
                 const postsJSON = JSON.stringify(posts, null, 2);
-
-                // Configura los detalles de tu repositorio
-                const githubToken = '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'; // Reemplaza con tu token
+                const githubToken = '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';
                 const repoOwner = 'ProduccionesPanditaNinja';
                 const repoName = 'ProduccionesPanditaNinja.github.io';
-                const filePath = 'postsActores.json'; // Nombre del archivo en tu repositorio
+                const filePath = 'postsActores.json';
                 const commitMessage = `Actualización de posts en ${new Date().toISOString()}`;
 
                 try {
-                    // Actualiza el archivo en GitHub
                     await updateGitHubFile(githubToken, repoOwner, repoName, filePath, postsJSON, commitMessage);
                     alert('Posts guardados en GitHub!');
                 } catch (error) {
@@ -201,18 +207,14 @@
                 localStorage.setItem('postsActores', JSON.stringify(posts));
                 loadPosts();
 
-                // Convertir los posts a JSON
                 const postsJSON = JSON.stringify(posts, null, 2);
-
-                // Configura los detalles de tu repositorio
-                const githubToken = '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'; // Reemplaza con tu token
+                const githubToken = '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';
                 const repoOwner = 'ProduccionesPanditaNinja';
                 const repoName = 'ProduccionesPanditaNinja.github.io';
-                const filePath = 'postsActores.json'; // Nombre del archivo en tu repositorio
+                const filePath = 'postsActores.json';
                 const commitMessage = `Actualización de posts en ${new Date().toISOString()}`;
 
                 try {
-                    // Actualiza el archivo en GitHub
                     await updateGitHubFile(githubToken, repoOwner, repoName, filePath, postsJSON, commitMessage);
                     alert('Posts guardados en GitHub!');
                 } catch (error) {
